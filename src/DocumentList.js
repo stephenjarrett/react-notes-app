@@ -2,17 +2,38 @@ import React from 'react';
 
 class DocumentList extends React.Component {
     render() {
+
+        // _createListItem = (note) => {
+        //     return (
+        //         <li className="document-list-item">
+        //         {note.title}
+        //         </li>
+        //     );
+        // }
+
+        // let items = this.props.allNotes.map(_createListItem());
+        
+        let items = this.props.allNotes.map(note => (
+            <li className="document-list-item" key={note.id}>
+                <a href="#" 
+                onClick={() => { this.props.handleSelection(note.id) }}>
+                {note.title}
+                </a> 
+            </li>
+            )
+        );
+        
         return (
             <div className="document-list">
                 <ul>
-                    <li className="document-list-item">Note 1</li>
-                    <li className="document-list-item">Note 2</li>
-                    <li className="document-list-item">Note 3</li>
+                    {items}
                 </ul>
             </div>
         );
     }
+    
 }
+
 
 
 export default DocumentList;
