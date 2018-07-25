@@ -30,10 +30,7 @@ class DocumentList extends React.Component {
                 </ul>
             </div>
         );
-    }
-    
+    }  
 }
-
-
 
 export default DocumentList;

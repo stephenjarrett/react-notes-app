@@ -34,10 +34,16 @@ class App extends React.Component {
             
             <SearchBar />
             <DocumentList allNotes={this.state.notes} handleSelection={this._selectNote} />
-            <DocumentEditor note={this._findNoteById()} />
+            <DocumentEditor note={this._findNoteById()} handleChange={this._updateNote}/>
             
         </div>
         );
+    }
+
+    componentDidMount() {
+        this.setState({
+            selectedId: this.state.notes[0].id
+        });
     }
 
     _findNoteById = () => {
@@ -52,6 +58,49 @@ class App extends React.Component {
         this.setState({
             selectedId: noteId
         });
+    }
+
+    _allNotesExceptSelectedNote = () => {
+        let selectedId = this.state.selectedId;
+        if (selectedId === -1) {
+            selectedId = this.state.notes[0].id;
+        }
+        let notesWitoutSelectedNote = this.state.notes.filter(note => note.id !==  selectedId);
+        return notesWitoutSelectedNote
+    }
+
+    _updateNote = (noteContent) => {
+        // grab existing note - don't need noteID since its selected in the editor/state already
+        let theNote = this._findNoteById();
+        // make a copy
+        // let updatedNote = Object.assign({}, theNote);
+        // // update the copy
+        // updatedNote.content = noteContent;
+        //alternate syntax of making a copy/updating - sprinkling or "Object spread" - common in Redux 
+        let updatedNote = {
+                ...theNote,
+                content: noteContent
+        };
+
+        // sprinkling again... or could concat or .push() the updatedNote after calling fn....
+        // let newNotesArray = [
+        //     ...this._allNotesExceptSelectedNote(),
+        //     updatedNote
+        // ];
+
+        // 3rd solution - use map to preserve order
+        let newNotesArray = this.state.notes.map(note => {
+            if (note.id === this.state.selectedId) {
+                return updatedNote;
+                }  else {
+                    return note;
+                }
+        })
+
+        // set the state
+        this.setState({
+            notes: newNotesArray
+        })
     }
 
 }

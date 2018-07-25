@@ -5,7 +5,7 @@ class DocumentEditor extends React.Component {
         return (
             <div className="document-editor">
                 {/* text area in JSX isn't regular HTML */}
-                <textarea value={this.props.note.content}  />
+                <textarea onChange={(e) => {this.props.handleChange(e.target.value)}}  value={this.props.note.content}  />
             </div>
         );
     }
