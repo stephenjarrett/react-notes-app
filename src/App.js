@@ -24,7 +24,9 @@ class App extends React.Component {
                     content: 'South Park'
                 }
             ],
-            selectedId: -1 // -1 means no selection
+            selectedId: -1, // -1 means no selection
+            searchText: '',
+            filteredSearchNotes: []
         };
     }
     render() {
@@ -32,8 +34,8 @@ class App extends React.Component {
         <div className="notes-app">
             <h1>React Notes App</h1>
             
-            <SearchBar />
-            <DocumentList allNotes={this.state.notes} handleSelection={this._selectNote} />
+            <SearchBar text={this.state.searchText} handleChange={this._updateSearchText} />
+            <DocumentList allNotes={this._retrieveNotesBySearchText()} handleSelection={this._selectNote} />
             <DocumentEditor note={this._findNoteById()} handleChange={this._updateNote}/>
             
         </div>
@@ -42,7 +44,8 @@ class App extends React.Component {
 
     componentDidMount() {
         this.setState({
-            selectedId: this.state.notes[0].id
+            selectedId: this.state.notes[0].id,
+            filteredSearchNotes: this.state.notes
         });
     }
 
@@ -58,6 +61,40 @@ class App extends React.Component {
         this.setState({
             selectedId: noteId
         });
+    }
+
+    _updateSearchText = (newSearchText) => {
+        this.setState({
+            searchText: newSearchText
+        });
+        // this._updateFilteredSearchNotes();
+    }
+
+    // _updateFilteredSearchNotes = () => {
+    //     let filteredNotes = this.state.notes.filter(note => {
+    //         return note.title.toLowerCase().includes(this.state.searchText.toLowerCase()) || note.content.toLowerCase().includes(this.state.searchText.toLocaleLowerCase())
+    //     });
+
+    //     this.setState({
+    //         filteredSearchNotes: filteredNotes,
+    //         selectedId: this.state.filteredSearchNotes[0].id
+    //     });
+    // }
+
+    _retrieveNotesBySearchText = () => {
+        // Is there search text? 
+        // If so, filter
+        // If not, return all
+        if (this.state.searchText !== '') {
+            let filteredNotes = this.state.notes.filter(note => {
+                let doesTitleMatch = note.title.toLowerCase().includes(this.state.searchText.toLowerCase());
+                let doesContentMatch = note.content.toLowerCase().includes(this.state.searchText.toLowerCase());
+                return doesTitleMatch || doesContentMatch
+            });
+            return filteredNotes
+        } else {
+            return this.state.notes
+        }
     }
 
     _allNotesExceptSelectedNote = () => {
