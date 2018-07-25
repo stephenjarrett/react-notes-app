@@ -26,7 +26,7 @@ class App extends React.Component {
             ],
             selectedId: -1, // -1 means no selection
             searchText: '',
-            filteredSearchNotes: []
+            // filteredSearchNotes: []
         };
     }
     render() {
@@ -45,7 +45,7 @@ class App extends React.Component {
     componentDidMount() {
         this.setState({
             selectedId: this.state.notes[0].id,
-            filteredSearchNotes: this.state.notes
+            // filteredSearchNotes: this.state.notes
         });
     }
 
